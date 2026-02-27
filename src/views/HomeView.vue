@@ -46,10 +46,50 @@
             </div>
           </div>
         </div>
-        
+      </section>
+      <section class="px-12 mt-10 relative z-10 space-y-12 pb-20">
         <div>
           <h3 class="text-2xl font-semibold mb-4">Ação</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div v-for="i in 6" :key="i" class="card bg-base-300 shadow-xl hover:scale-105 transition-transform cursor-pointer">
+              <figure><img src="https://placehold.co/300x160" alt="Filme" /></figure>
+              <div class="p-2 text-sm font-medium">Nome do Filme {{ i }}</div>
+            </div>
           </div>
+        </div>
+      </section>
+      <section class="px-12 mt-10 relative z-10 space-y-12 pb-20">
+        <div>
+          <h3 class="text-2xl font-semibold mb-4">Comédia</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div v-for="i in 6" :key="i" class="card bg-base-300 shadow-xl hover:scale-105 transition-transform cursor-pointer">
+              <figure><img src="https://placehold.co/300x160" alt="Filme" /></figure>
+              <div class="p-2 text-sm font-medium">Nome do Filme {{ i }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="px-12 mt-10 relative z-10 space-y-12 pb-20">
+        <div>
+          <h3 class="text-2xl font-semibold mb-4">Ficção Científica</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div v-for="i in 6" :key="i" class="card bg-base-300 shadow-xl hover:scale-105 transition-transform cursor-pointer">
+              <figure><img src="https://placehold.co/300x160" alt="Filme" /></figure>
+              <div class="p-2 text-sm font-medium">Nome do Filme {{ i }}</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="px-12 mt-10 relative z-10 space-y-12 pb-20">
+        <div>
+          <h3 class="text-2xl font-semibold mb-4">Animação</h3>
+          <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div v-for="i in 6" :key="i" class="card bg-base-300 shadow-xl hover:scale-105 transition-transform cursor-pointer">
+              <figure><img src="https://placehold.co/300x160" alt="Filme" /></figure>
+              <div class="p-2 text-sm font-medium">Nome do Filme {{ i }}</div>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   </div>

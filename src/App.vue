@@ -7,9 +7,9 @@
     <a class="btn btn-ghost text-error text-3xl font-bold tracking-tighter">Streaming Films</a>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
-        <li><a>Início</a></li>
-        <li><a>Ranking</a></li>
-        <li><a>Meu Histórico</a></li>
+        <li><RouterLink to="/">Início</RouterLink></li>
+        <li><RouterLink to="/ranking">Ranking</RouterLink></li>
+        <li><RouterLink to="/ranking">Meu Histórico</RouterLink></li>
         <li>
           <details>
             <summary>Admin</summary>
