@@ -1,12 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import RankingView from '../views/RankingView.vue'
+import HistoricoView from '../views/HistoricoView.vue'
+import ProfileView from '../views/ProfileView.vue'
+import GerenciarProfileView from '../views/GerenciarProfileView.vue'
+import GerenciarVideosView from '../views/GerenciarVideosView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      name: 'profile',
+      component: ProfileView,
+      meta: { hideNavbar: true }
+    },
+    {
+      path: '/home',
       name: 'home',
       component: HomeView,
     },
@@ -14,6 +24,22 @@ const router = createRouter({
       path: '/ranking',
       name: 'Ranking',
       component: RankingView,
+    },
+    {
+      path: '/historico',
+      name: 'Historico',
+      component: HistoricoView,
+    },
+    {
+      path: '/gerenciarPerfil',
+      name: 'GerenciarPerfil',
+      component: GerenciarProfileView,
+      meta: { hideNavbar: true }
+    },
+    {
+      path: '/gerenciarVideos',
+      name: 'GerenciarVideos',
+      component: GerenciarVideosView,
     },
     {
       path: '/about',

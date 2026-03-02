@@ -2,19 +2,19 @@
 </script>
 
 <template>
-<div class="navbar bg-base-100 shadow-sm">
+<div v-if="!$route.meta.hideNavbar" class="navbar bg-base-100 shadow-sm">
   <div class="navbar-start flex-1">
-    <a class="btn btn-ghost text-error text-3xl font-bold tracking-tighter">Streaming Films</a>
+    <RouterLink to="/home" class="btn btn-ghost text-error text-3xl font-bold tracking-tighter" >Streaming Films</RouterLink>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
-        <li><RouterLink to="/">Início</RouterLink></li>
+        <li><RouterLink to="/home">Início</RouterLink></li>
         <li><RouterLink to="/ranking">Ranking</RouterLink></li>
-        <li><RouterLink to="/ranking">Meu Histórico</RouterLink></li>
+        <li><RouterLink to="/historico">Meu Histórico</RouterLink></li>
         <li>
           <details>
             <summary>Admin</summary>
             <ul class="p-2 bg-base-100 w-40 z-1">
-              <li><a>Gerenciar Vídeos</a></li>
+              <li><RouterLink to="/gerenciarVideos">Gerenciar Vídeos</RouterLink></li>
               <li><a>Gerenciar Perfis</a></li>
             </ul>
           </details>
@@ -42,7 +42,7 @@
           </a>
         </li>
         <li><a>Settings</a></li>
-        <li><a>Logout</a></li>
+        <li><RouterLink to="/">Logout</RouterLink></li>
       </ul>
     </div>
   </div>
