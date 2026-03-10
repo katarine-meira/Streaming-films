@@ -5,6 +5,7 @@ import HistoricoView from '../views/HistoricoView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import GerenciarProfileView from '../views/GerenciarProfileView.vue'
 import GerenciarVideosView from '../views/GerenciarVideosView.vue'
+import MovieDetailView from '../views/MovieDetailView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,6 +41,11 @@ const router = createRouter({
       path: '/gerenciarVideos',
       name: 'GerenciarVideos',
       component: GerenciarVideosView,
+    },
+    {
+      path: '/movie/:id',
+      name: 'MovieDetail',
+      component: MovieDetailView,
     },
     {
       path: '/about',

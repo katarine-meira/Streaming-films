@@ -1,122 +1,145 @@
 <template>
-  <div class="min-h-screen bg-base-100 flex flex-col items-center justify-center text-white px-4">
+  <div class="min-h-screen bg-base-100 flex flex-col items-center py-12 text-white px-4">
     
-    <h1 class="text-4xl md:text-5xl font-medium mb-10 tracking-wide text-center">
-      Quem está assistindo?
-    </h1>
-
-    <div class="flex flex-wrap justify-center gap-6 md:gap-10 mb-16">
-      
-      <div v-for="perfil in perfis" :key="perfil.nome" class="group flex flex-col items-center cursor-pointer"
-      @click="perfil.isAdd ? abrirNovo() : null">
-        <div :class="perfil.isAdd ? 'bg-zinc-800 border-none' : 'bg-red-600'" 
-             class="w-32 h-32 md:w-40 md:h-40 rounded-lg flex items-center justify-center relative overflow-hidden transition-all duration-300 group-hover:ring-4 group-hover:ring-white">
-          
-          <span v-if="!perfil.isAdd" class="text-6xl md:text-7xl">{{ perfil.avatar }}</span>
-          <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
+    <div class="w-full max-w-4xl bg-zinc-900/50 p-6 rounded-2xl border border-white/5 mb-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <label class="label text-gray-400">Usuário da Conta</label>
+          <select v-model="usuarioSelecionado" class="select select-bordered bg-zinc-900 w-full">
+            <option :value="null">Selecione um usuário</option>
+            <option v-for="user in usuarios" :key="user._id" :value="user">
+              {{ user.name }}
+            </option>
+          </select>
         </div>
 
-        <div class="mt-4 text-center">
-          <p class="text-gray-400 group-hover:text-white transition-colors text-lg font-medium">
-            {{ perfil.nome }}
-          </p>
-          <span v-if="perfil.tipo" class="text-xs text-zinc-500 font-semibold uppercase tracking-widest block mt-1">
-            {{ perfil.tipo }}
-          </span>
+        <div>
+          <label class="label text-gray-400">Novo Usuário</label>
+          <div class="flex gap-2">
+            <input v-model="novoUsuario.name" class="input input-bordered bg-zinc-900 w-1/2" placeholder="Nome" />
+            <input v-model="novoUsuario.email" class="input input-bordered bg-zinc-900 w-1/2" placeholder="Email" />
+            <button class="btn btn-error" @click="criarUsuario">Add</button>
+          </div>
         </div>
       </div>
-
     </div>
-    <dialog ref="modalPerfil" class="modal">
-      <div class="modal-box bg-[#1a1a1a] border border-white/10 max-w-md">
-        <form method="dialog">
-          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-gray-400">✕</button>
-        </form>
 
-        <h3 class="text-2xl font-bold mb-6">{{ modoEdicao ? 'Editar Perfil' : 'Novo Perfil' }}</h3>
-
-        <div class="space-y-4">
-          <div class="form-control">
-            <label class="label"><span class="label-text text-gray-300 font-bold">Nome do Perfil</span></label>
-            <input type="text" placeholder="Ex: João Adulto" class="input input-bordered bg-zinc-900 focus:border-white transition-all w-full" />
+    <div v-if="usuarioSelecionado" class="text-center">
+      <h1 class="text-4xl font-medium mb-10">Quem está assistindo?</h1>
+      <div class="flex flex-wrap justify-center gap-8">
+        <div v-for="(perfil, index) in usuarioSelecionado.profiles" :key="index" 
+             @click="entrarNoPerfil(perfil)" class="cursor-pointer group">
+          <div class="w-32 h-32 bg-red-600 rounded-lg flex items-center justify-center group-hover:ring-4 ring-white transition-all">
+            <span class="text-6xl">{{ perfil.avatar }}</span>
           </div>
-
-          <div class="form-control">
-            <label class="label"><span class="label-text text-gray-300 font-bold">Faixa Etária</span></label>
-            <select class="select select-bordered bg-zinc-900 w-full">
-              <option selected>Adulto</option>
-              <option>Infantil</option>
-            </select>
-          </div>
-
-          <div class="form-control">
-            <label class="label"><span class="label-text text-gray-300 font-bold">Avatar</span></label>
-            <select class="select select-bordered bg-zinc-900 w-full">
-              <option>👶 Bebe</option>
-              <option selected>👦 Menino</option>
-              <option>👧 Menina</option>
-            </select>
-          </div>
+          <p class="mt-2 text-gray-400 group-hover:text-white">{{ perfil.name }}</p>
         </div>
 
-        <div class="modal-action grid grid-cols-2 gap-4 mt-8">
-          <button class="btn btn-error text-white font-bold">{{ modoEdicao ? 'Salvar Alterações' : 'Criar Perfil' }}</button>
-          <form method="dialog">
-            <button class="btn btn-ghost bg-white text-black hover:bg-gray-200 font-bold">Cancelar</button>
-          </form>
+        <div @click="modalPerfilRef?.abrir()" class="cursor-pointer group">
+          <div class="w-32 h-32 bg-zinc-800 rounded-lg flex items-center justify-center group-hover:bg-zinc-700 transition-all">
+            <span class="text-4xl text-gray-500">+</span>
+          </div>
+          <p class="mt-2 text-gray-400">Novo Perfil</p>
         </div>
       </div>
-
-      <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-      </form>
-    </dialog>
-
-    <button class="btn btn-outline border-zinc-600 text-zinc-500 hover:bg-transparent hover:text-white hover:border-white px-8 rounded-none tracking-widest uppercase">
-      <RouterLink to="/gerenciarPerfil">Gerenciar Perfis</RouterLink>
-    </button>
+    </div>
+    <div v-if="usuarioSelecionado" class="mt-12">
+      <button 
+        @click="$router.push('/gerenciarPerfil')" 
+        class="btn btn-outline border-zinc-600 text-zinc-500 hover:bg-transparent hover:text-white hover:border-white px-8 rounded-none tracking-widest uppercase"
+      >
+        Gerenciar Perfis
+      </button>
+    </div>
+    <PerfilDialog ref="modalPerfilRef" @salvar="handleSalvarPerfil" />
   </div>
 </template>
-
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted, watch } from "vue"
+import api from '../services/api'
+import PerfilDialog from '../components/PerfilDialog.vue'
+import { useRouter } from 'vue-router'
 
-const modalPerfil = ref<HTMLDialogElement | null>(null);
-const modoEdicao = ref(false);
+// 1. Interfaces primeiro
+interface Perfil {
+  name: string
+  ageGroup: string
+  avatar: string
+}
 
-// Dados temporários do formulário
-const form = reactive({
-  id: null,
-  nome: '',
-  faixaEtaria: 'Adulto',
-  avatar: '👦'
-});
+interface Usuario {
+  _id: string 
+  name: string
+  email: string
+  profiles: Perfil[]
+}
 
-const perfis = [
-  { nome: 'João Kids', avatar: '👶', tipo: 'infantil', isAdd: false },
-  { nome: 'João Adulto', avatar: '👦', tipo: 'adulto', isAdd: false },
-  { nome: 'Adicionar Perfil', avatar: '', tipo: '', isAdd: true },
-];
+// 2. Declarações de variáveis (Estado)
+const router = useRouter()
+const usuarios = ref<Usuario[]>([])
+const usuarioSelecionado = ref<Usuario | null>(null)
+const modalPerfilRef = ref<InstanceType<typeof PerfilDialog> | null>(null)
+const novoUsuario = reactive({ name: "", email: "" })
 
-// Função para abrir em modo Edição
-// const abrirEdicao = (perfil) => {
-//   modoEdicao.value = true;
-//   form.id = perfil.id;
-//   form.nome = perfil.nome;
-//   form.faixaEtaria = perfil.tipo;
-//   form.avatar = perfil.avatar;
-//   modalPerfil.value?.showModal();
-// };
+// 3. Watches (Agora as variáveis acima já existem!)
+watch(usuarioSelecionado, (novo) => {
+  if (novo) localStorage.setItem('usuarioAtivo', JSON.stringify(novo))
+})
 
-// Função para abrir em modo Novo Perfil
-const abrirNovo = () => {
-  modoEdicao.value = false;
-  form.id = null;
-  form.nome = '';
-  form.faixaEtaria = 'Adulto';
-  form.avatar = '👦';
-  modalPerfil.value?.showModal();
-};
+// 4. Funções de Lógica
+const entrarNoPerfil = (perfil: Perfil) => {
+  localStorage.setItem('perfilAtivo', JSON.stringify(perfil))
+  router.push('/home') 
+}
+
+const carregarUsuarios = async () => {
+  try {
+    const res = await api.get('/user')
+    usuarios.value = res.data
+  } catch (error) {
+    console.error("Erro ao buscar usuários:", error)
+  }
+}
+
+const criarUsuario = async () => {
+  if (!novoUsuario.name || !novoUsuario.email) return
+  try {
+    const res = await api.post('/user', {
+      name: novoUsuario.name,
+      email: novoUsuario.email,
+      profiles: []
+    })
+    usuarios.value.push(res.data)
+    novoUsuario.name = ""
+    novoUsuario.email = ""
+  } catch (error) {
+    console.error("Erro ao criar usuário:", error)
+  }
+}
+
+const handleSalvarPerfil = async (perfil: Perfil, index: number | null) => {
+  if (!usuarioSelecionado.value) return
+  const novosPerfis = [...usuarioSelecionado.value.profiles]
+  if (index !== null) {
+    novosPerfis[index] = perfil
+  } else {
+    novosPerfis.push(perfil)
+  }
+
+  try {
+    const res = await api.put(`/user/${usuarioSelecionado.value._id}`, {
+      profiles: novosPerfis
+    })
+    usuarioSelecionado.value.profiles = res.data.profiles
+    const userIdx = usuarios.value.findIndex(u => u._id === res.data._id)
+    if (userIdx !== -1) usuarios.value[userIdx] = res.data
+  } catch (error) {
+    console.error("Erro ao atualizar perfis:", error)
+  }
+}
+
+// 5. Lifecycle
+onMounted(() => {
+  carregarUsuarios()
+})
 </script>
