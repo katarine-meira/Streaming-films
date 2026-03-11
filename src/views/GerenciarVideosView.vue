@@ -26,60 +26,47 @@
             <h3 class="text-xl font-bold">Adicionar Novo Vídeo</h3>
           </div>
 
-          <div class="space-y-4">
+          <form @submit.prevent="adicionarVideo" class="space-y-4">
             <div class="form-control">
               <label class="label text-xs font-bold text-gray-500 uppercase">Título</label>
-              <input type="text" placeholder="Ex: A Última Fronteira" class="input input-bordered bg-zinc-900 focus:border-white w-full" />
+              <input v-model="novoVideo.titulo" type="text" required placeholder="Ex: Interestelar" class="input input-bordered bg-zinc-900 focus:border-white w-full" />
             </div>
 
             <div class="grid grid-cols-2 gap-4">
               <div class="form-control">
                 <label class="label text-xs font-bold text-gray-500 uppercase">Categoria</label>
-                <select class="select select-bordered bg-zinc-900 w-full">
-                  <option disabled selected>Selecione</option>
-                  <option>Ação</option>
-                  <option>Comédia</option>
-                  <option>Ficção Científica</option>
+                <select v-model="novoVideo.categoria" required class="select select-bordered bg-zinc-900 w-full capitalize">
+                  <option value="" disabled>Selecione</option>
+                  <option value="acao">Ação</option>
+                  <option value="comedia">Comédia</option>
+                  <option value="ficcao">Ficção Científica</option>
+                  <option value="suspense">Suspense</option>
+                  <option value="drama">Drama</option>
+                  <option value="drama">Crime</option>
                 </select>
               </div>
-              <div class="form-control">
-                <label class="label text-xs font-bold text-gray-500 uppercase">Classificação</label>
-                <select class="select select-bordered bg-zinc-900 w-full">
-                  <option disabled selected>Selecione</option>
-                  <option>L</option>
-                  <option>12+</option>
-                  <option>14+</option>
-                  <option>18+</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
               <div class="form-control">
                 <label class="label text-xs font-bold text-gray-500 uppercase">Duração (min)</label>
-                <input type="number" placeholder="120" class="input input-bordered bg-zinc-900 w-full" />
-              </div>
-              <div class="form-control">
-                <label class="label text-xs font-bold text-gray-500 uppercase">Ano de Lançamento</label>
-                <input type="number" placeholder="2026" class="input input-bordered bg-zinc-900 w-full" />
+                <input v-model="novoVideo.duracao" type="number" required placeholder="120" class="input input-bordered bg-zinc-900 w-full" />
               </div>
             </div>
 
             <div class="form-control">
               <label class="label text-xs font-bold text-gray-500 uppercase">Descrição</label>
-              <textarea placeholder="Uma breve descrição do vídeo..." class="textarea textarea-bordered bg-zinc-900 h-24 focus:border-white w-full"></textarea>
+              <textarea v-model="novoVideo.descricao" required placeholder="Uma breve descrição..." class="textarea textarea-bordered bg-zinc-900 h-24 focus:border-white w-full"></textarea>
             </div>
 
             <div class="form-control">
               <label class="label text-xs font-bold text-gray-500 uppercase">URL da Thumbnail</label>
-              <input type="text" placeholder="https://exemplo.com/imagem.jpg" class="input input-bordered bg-zinc-900 w-full" />
-              <p class="text-[10px] text-gray-500 mt-1 italic">Use uma URL de imagem válida (Unsplash, etc.)</p>
+              <input v-model="novoVideo.img_url" type="text" required placeholder="https://..." class="input input-bordered bg-zinc-900 w-full" />
+              <p class="text-[10px] text-gray-500 mt-1 italic">Use posters reais do IMDb ou TMDB.</p>
             </div>
 
-            <button class="btn btn-error w-full text-white font-bold mt-4">
-              <span class="text-xl">+</span> Adicionar Vídeo
+            <button type="submit" class="btn btn-error w-full text-white font-bold mt-4" :disabled="loading">
+              <span v-if="!loading" class="text-base">+ Adicionar Vídeo</span>
+              <span v-else class="loading loading-spinner"></span>
             </button>
-          </div>
+          </form>
         </section>
 
         <section class="lg:col-span-7">
@@ -98,25 +85,36 @@
           </div>
 
           <div class="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
-            <div v-for="video in videos" :key="video.id" 
+            <div v-for="video in videos" :key="video._id" 
                  class="flex items-center gap-4 bg-[#1a1a1a] p-3 rounded-xl border border-white/5 hover:bg-[#222] transition-colors">
-              <img :src="video.thumb" class="w-24 h-16 object-cover rounded-lg flex-none" />
+              
+              <img :src="video.img_url" class="w-24 h-16 object-cover rounded-lg flex-none shadow-md" />
+              
               <div class="flex-1 min-w-0">
-                <h4 class="font-bold truncate">{{ video.titulo }}</h4>
+                <h4 class="font-bold truncate text-base">{{ video.titulo }}</h4>
+                
                 <div class="flex items-center gap-2 text-[10px] text-gray-500 uppercase tracking-wider mt-1">
-                  <span>{{ video.genero }}</span>
+                  <span class="text-error font-bold">{{ video.categoria }}</span>
                   <span>•</span>
                   <span>{{ video.duracao }} min</span>
                   <span>•</span>
-                  <span class="border border-gray-700 px-1 rounded">{{ video.classificacao }}</span>
+                  <span class="border border-gray-700 px-1 rounded">HD</span>
                 </div>
+
                 <div class="flex items-center gap-3 text-xs text-gray-400 mt-1">
-                  <span>{{ video.visualizacoes }} visualizações</span>
+                  <span>{{ video.numero_views.toLocaleString() }} visualizações</span>
                   <span>•</span>
-                  <span class="text-yellow-500">★ {{ video.nota }}</span>
+                  <span class="text-yellow-500 font-medium">★ {{ video.nota_media.toFixed(1) }}</span>
                 </div>
               </div>
-              <button class="btn btn-ghost btn-sm text-error hover:bg-error/10">Remover</button>
+
+              <button @click="removerVideo(video._id)" class="btn btn-ghost btn-sm text-error hover:bg-error/10">
+                Remover
+              </button>
+            </div>
+            
+            <div v-if="videos.length === 0" class="text-center py-10 text-gray-600 italic">
+              Nenhum vídeo cadastrado no banco.
             </div>
           </div>
         </section>
@@ -127,20 +125,78 @@
 </template>
 
 <script setup lang="ts">
-const videos = [
-  { id: 1, titulo: "A Última Fronteira", genero: "Ação", duracao: 142, classificacao: "14+", visualizacoes: "15.420", nota: 4.7, thumb: "https://placehold.co/200x120" },
-  { id: 2, titulo: "Sombras do Passado", genero: "Thriller", duracao: 118, classificacao: "16+", visualizacoes: "12.340", nota: 4.5, thumb: "https://placehold.co/200x120" },
-  { id: 3, titulo: "Amigos Para Sempre", genero: "Comédia", duracao: 95, classificacao: "L", visualizacoes: "18.900", nota: 4.8, thumb: "https://placehold.co/200x120" },
-  { id: 4, titulo: "Corações Entrelaçados", genero: "Romance", duracao: 105, classificacao: "12+", visualizacoes: "14.560", nota: 4.6, thumb: "https://placehold.co/200x120" },
-  { id: 5, titulo: "Além do Horizonte", genero: "Ficção Científica", duracao: 156, classificacao: "12+", visualizacoes: "22.100", nota: 4.9, thumb: "https://placehold.co/200x120" },
-  { id: 5, titulo: "Além do Horizonte", genero: "Ficção Científica", duracao: 156, classificacao: "12+", visualizacoes: "22.100", nota: 4.9, thumb: "https://placehold.co/200x120" },
-  { id: 5, titulo: "Além do Horizonte", genero: "Ficção Científica", duracao: 156, classificacao: "12+", visualizacoes: "22.100", nota: 4.9, thumb: "https://placehold.co/200x120" },
-  { id: 5, titulo: "Além do Horizonte", genero: "Ficção Científica", duracao: 156, classificacao: "12+", visualizacoes: "22.100", nota: 4.9, thumb: "https://placehold.co/200x120" },
-  { id: 5, titulo: "Além do Horizonte", genero: "Ficção Científica", duracao: 156, classificacao: "12+", visualizacoes: "22.100", nota: 4.9, thumb: "https://placehold.co/200x120" },
-  { id: 5, titulo: "Além do Horizonte", genero: "Ficção Científica", duracao: 156, classificacao: "12+", visualizacoes: "22.100", nota: 4.9, thumb: "https://placehold.co/200x120" },
-  { id: 5, titulo: "Além do Horizonte", genero: "Ficção Científica", duracao: 156, classificacao: "12+", visualizacoes: "22.100", nota: 4.9, thumb: "https://placehold.co/200x120" },
-  { id: 5, titulo: "Além do Horizonte", genero: "Ficção Científica", duracao: 156, classificacao: "12+", visualizacoes: "22.100", nota: 4.9, thumb: "https://placehold.co/200x120" },
-];
+import { ref, onMounted } from 'vue';
+import api from '../services/api';
+
+interface Video {
+  _id: string;
+  titulo: string;
+  descricao: string;
+  categoria: string;
+  duracao: number;
+  img_url: string;
+  numero_views: number;
+  nota_media: number;
+}
+
+const videos = ref<Video[]>([]);
+const loading = ref(false);
+
+const novoVideo = ref({
+  titulo: '',
+  descricao: '',
+  categoria: '',
+  duracao: null as number | null,
+  img_url: ''
+});
+
+const carregarVideos = async () => {
+  try {
+    const res = await api.get('/videos');
+    videos.value = res.data;
+  } catch (error) {
+    console.error("Erro ao carregar vídeos:", error);
+  }
+};
+
+const adicionarVideo = async () => {
+  if (!novoVideo.value.categoria) return alert("Selecione uma categoria");
+  
+  loading.value = true;
+  try {
+    await api.post('/videos', novoVideo.value);
+    
+    // Reset do form
+    novoVideo.value = {
+      titulo: '',
+      descricao: '',
+      categoria: '',
+      duracao: null,
+      img_url: ''
+    };
+    
+    await carregarVideos();
+  } catch (error) {
+    console.error("Erro ao salvar:", error);
+    alert("Erro ao adicionar o vídeo ao banco de dados.");
+  } finally {
+    loading.value = false;
+  }
+};
+
+const removerVideo = async (id: string) => {
+  if (!confirm("Deseja excluir permanentemente este vídeo?")) return;
+  
+  try {
+    await api.delete(`/videos/${id}`);
+    await carregarVideos();
+  } catch (error) {
+    console.error("Erro ao remover:", error);
+    alert("Não foi possível excluir o vídeo.");
+  }
+};
+
+onMounted(carregarVideos);
 </script>
 
 <style scoped>
@@ -152,7 +208,7 @@ const videos = [
   border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #e50914;
+  background: #ff0000;
   border-radius: 10px;
 }
 </style>

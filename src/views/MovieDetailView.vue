@@ -23,13 +23,13 @@
         
         <div class="w-full max-w-2xl bg-white/20 h-1.5 rounded-full overflow-hidden backdrop-blur-sm">
           <div 
-            class="bg-error h-full transition-all duration-700" 
+            class="bg-red-700 h-full transition-all duration-700" 
             :style="{ width: formHistorico.progresso + '%' }"
           ></div>
         </div>
 
         <div class="flex items-center gap-4">
-          <button @click="modalAberto = true" class="btn btn-error btn-lg px-12 text-white font-bold shadow-lg">
+          <button @click="modalAberto = true" class="btn bg-red-800 btn-lg px-12 text-white font-bold shadow-lg">
             {{ historicoUsuario ? 'Continuar Assistindo' : 'Assistir Agora' }}
           </button>
         </div>
@@ -54,12 +54,12 @@
 
         <section class="bg-zinc-900/40 p-6 rounded-2xl border border-white/5">
           <h3 class="font-bold text-xl mb-3 flex items-center gap-2">
-            <span class="w-1 h-5 bg-error rounded-full"></span> Sinopse
+            <span class="w-1 h-5 bg-red-700 rounded-full"></span> Sinopse
           </h3>
           <p class="text-gray-400 text-lg leading-relaxed">{{ movie.descricao }}</p>
         </section>
 
-        <section class="bg-gradient-to-br from-zinc-900 to-black p-8 rounded-2xl border border-white/5">
+        <section class="bg-gradient-to-br to-red-950 from-black p-8 rounded-2xl">
           <h3 class="text-xl font-bold mb-4">⭐ Sua Avaliação</h3>
           <div class="rating rating-lg gap-2">
             <input v-for="i in 5" :key="i" type="radio" 
@@ -75,7 +75,7 @@
 
       <aside class="lg:col-span-4 space-y-6">
         <div class="bg-zinc-900 p-8 rounded-2xl border border-white/5">
-          <h3 class="text-error font-bold mb-6 flex items-center gap-2">📈 Estatísticas</h3>
+          <h3 class="text-red-800 font-bold mb-6 flex items-center gap-2">📈 Estatísticas</h3>
           <div class="space-y-6">
             <div>
               <p class="text-gray-500 text-sm">Visualizações Totais</p>
@@ -113,7 +113,7 @@
           <div>
             <div class="flex justify-between text-sm mb-2">
               <span>{{ minutosAssistidos }} min assistidos</span>
-              <span class="text-error">{{ formHistorico.progresso }}%</span>
+              <span class="text-red-700 font-bold">{{ formHistorico.progresso }}%</span>
             </div>
             <input type="range" min="0" max="100" v-model="formHistorico.progresso" class="range range-error range-sm" />
           </div>
@@ -125,7 +125,7 @@
         </div>
         <div class="modal-action">
           <button class="btn btn-ghost" @click="modalAberto = false">Cancelar</button>
-          <button class="btn btn-error text-white px-6" @click="enviarVisualizacao">Salvar Progresso</button>
+          <button class="btn bg-red-800 text-white px-6" @click="enviarVisualizacao">Salvar Progresso</button>
         </div>
       </div>
     </dialog>

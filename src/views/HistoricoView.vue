@@ -9,13 +9,13 @@
 
       <div v-if="historico.length > 0" class="space-y-4">
         <div v-for="item in historico" :key="item._id" 
-             @click="$router.push(`/video/${item.video}`)"
+             @click="$router.push(`/movie/${item.video}`)"
              class="group relative flex flex-col md:flex-row gap-6 bg-[#1a1a1a] border border-white/5 p-4 rounded-xl hover:bg-[#222] transition-all cursor-pointer">
           
           <div class="relative w-full md:w-64 flex-none">
-            <img :src="item.video_info?.img_url || 'https://placehold.co/600x400'" 
+            <img :src="item.video_info[0]?.img_url || 'https://placehold.co/600x400'" 
                  class="rounded-lg w-full h-40 object-cover shadow-2xl" 
-                 :alt="item.video_info?.titulo" />
+                 :alt="item.video_info[0]?.titulo" />
             
             <div class="absolute bottom-0 left-0 w-full h-1 bg-gray-600 rounded-b-lg overflow-hidden">
               <div class="h-full bg-error" :style="{ width: item.progresso + '%' }"></div>
@@ -24,18 +24,18 @@
 
           <div class="flex-1 flex flex-col justify-between py-1">
             <div>
-              <h3 class="text-xl font-bold mb-2">{{ item.video_info?.titulo || 'Vídeo Removido' }}</h3>
+              <h3 class="text-xl font-bold mb-2">{{ item.video_info[0]?.titulo || 'Vídeo Removido' }}</h3>
               
               <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-400 mb-3">
-                <span class="flex items-center gap-1">📅 {{ formatarData(item.updatedAt) }}</span>
+                <span class="flex items-center gap-1">📅 {{ formatarData(item.data_visualisacao) }}</span>
                 <span>•</span>
-                <span>🕒 {{ item.video_info?.duracao }} min</span>
+                <span>🕒 {{ item.video_info[0]?.duracao }} min</span>
                 <span>•</span>
-                <span class="capitalize">{{ item.video_info?.categoria }}</span>
+                <span class="capitalize">{{ item.video_info[0]?.categoria }}</span>
               </div>
 
               <p class="text-sm text-gray-400 line-clamp-2 mb-4">
-                {{ item.video_info?.descricao }}
+                {{ item.video_info[0]?.descricao }}
               </p>
             </div>
 
@@ -64,7 +64,7 @@
 
       <div v-else class="text-center py-20 bg-zinc-900/50 rounded-2xl border border-dashed border-white/10">
         <p class="text-gray-500">Você ainda não assistiu a nenhum vídeo.</p>
-        <button @click="$router.push('/')" class="btn btn-error btn-sm mt-4 text-white">Explorar Filmes</button>
+        <button @click="$router.push('/home')" class="btn btn-error btn-sm mt-4 text-white">Explorar Filmes</button>
       </div>
 
     </div>
@@ -75,7 +75,7 @@
 import { ref, onMounted } from 'vue';
 import api from '../services/api';
 
-interface Video {
+interface VideoInfo {
   titulo: string;
   descricao: string;
   img_url: string;
@@ -88,8 +88,8 @@ interface HistoricoItem {
   video: string;
   progresso: number;
   avaliacao: number;
-  updatedAt: string;
-  video_info?: Video; // Opcional, dependendo de como seu back envia
+  data_visualisacao: string; 
+  video_info: VideoInfo[];
 }
 
 const historico = ref<HistoricoItem[]>([]);
@@ -109,11 +109,8 @@ const carregarHistorico = async () => {
     const userAtivo = JSON.parse(localStorage.getItem('usuarioAtivo') || '{}');
     if (!userAtivo._id) return;
 
-    // Buscamos o histórico do usuário
     const response = await api.get(`/historico/${userAtivo._id}`);
     
-    // Se o seu backend já traz o "video_info" via aggregate, perfeito.
-    // Se não trouxer, você precisaria fazer um map buscando os detalhes de cada vídeo.
     historico.value = response.data;
   } catch (error) {
     console.error("Erro ao carregar histórico:", error);
