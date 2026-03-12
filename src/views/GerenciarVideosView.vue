@@ -42,7 +42,8 @@
                   <option value="ficcao">Ficção Científica</option>
                   <option value="suspense">Suspense</option>
                   <option value="drama">Drama</option>
-                  <option value="drama">Crime</option>
+                  <option value="crime">Crime</option>
+                  <option value="terror">Terror</option>
                 </select>
               </div>
               <div class="form-control">
