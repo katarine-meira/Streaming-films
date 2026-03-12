@@ -94,7 +94,7 @@ const entrarNoPerfil = (perfil: Perfil) => {
 
 const carregarUsuarios = async () => {
   try {
-    const res = await api.get('/user')
+    const res = await api.get('/users')
     usuarios.value = res.data
   } catch (error) {
     console.error("Erro ao buscar usuários:", error)
@@ -104,7 +104,7 @@ const carregarUsuarios = async () => {
 const criarUsuario = async () => {
   if (!novoUsuario.name || !novoUsuario.email) return
   try {
-    const res = await api.post('/user', {
+    const res = await api.post('/users', {
       name: novoUsuario.name,
       email: novoUsuario.email,
       profiles: []
@@ -127,7 +127,7 @@ const handleSalvarPerfil = async (perfil: Perfil, index: number | null) => {
   }
 
   try {
-    const res = await api.put(`/user/${usuarioSelecionado.value._id}`, {
+    const res = await api.put(`/users/${usuarioSelecionado.value._id}`, {
       profiles: novosPerfis
     })
     usuarioSelecionado.value.profiles = res.data.profiles

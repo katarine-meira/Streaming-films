@@ -225,7 +225,7 @@ const enviarVisualizacao = async () => {
   };
 
   try {
-    await api.post('/visualizar', payload);
+    await api.post('/historico/visualizar', payload);
     modalAberto.value = false;
     await carregarDados(); // Atualiza a tela
   } catch (err) {
