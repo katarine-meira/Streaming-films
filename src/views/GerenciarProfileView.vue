@@ -118,7 +118,7 @@ const atualizarNoBack = async (novosPerfis: Perfil[]) => {
   if (!usuario.value) return
   
   try {
-    const res = await api.put(`/user/${usuario.value._id}`, { 
+    const res = await api.put(`/users/${usuario.value._id}`, { 
       profiles: novosPerfis 
     })
     
